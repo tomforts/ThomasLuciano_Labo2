@@ -15,7 +15,34 @@ export default class MathsController extends Controller {
         let operator = params.op;
         let x = parseInt(params.x);
         let y = parseInt(params.y);
+        let n = parseInt(params.n);
         
+        
+
+        if(operator == ' ' || operator == '-' || operator == '*' || operator == '/' || operator == '%'){
+           if(isNaN(x)){
+                params.error = "'x' is not a number or is missing";
+            }
+    
+            if(isNaN(y)){
+                params.error = "'y' is not a number or is missing";
+            }
+        }
+        else if(operator == '!' || operator == 'p' || operator == 'np'){
+            if(isNaN(n)){
+                params.error = "'n' is not a number or is missing";
+            }
+        }
+        else{
+            params.error = "operation doesn't exists";
+        }
+        
+        
+
+        if(params.error != null){
+            httpContext.response.JSON(params);
+            return;
+        }
         
         switch(operator){
             //addition
@@ -29,11 +56,11 @@ export default class MathsController extends Controller {
             //modulo
             case '%': params.value = x % y; break;
             //factorial
-            case '!': params.value = this.getFactorial(x); break;
+            case '!': params.value = this.getFactorial(n); break;
             //prime
-            case 'p': params.value = this.isPrime(x); break;
+            case 'p': params.value = this.isPrime(n); break;
             //nieme prime
-            case 'np': params.value = this.findPrime(x); break;
+            case 'np': params.value = this.findPrime(n); break;
 
         }
 
@@ -44,7 +71,7 @@ export default class MathsController extends Controller {
         if(number < 0){
             return -1;
         }
-        if (mumber === 0){
+        else if (mumber === 0){
             return 1;
         }
         else{
