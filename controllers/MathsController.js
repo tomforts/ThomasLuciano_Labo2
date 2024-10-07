@@ -7,45 +7,39 @@ export default class MathsController extends Controller {
         super(HttpContext);
     }
 
-    
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+//object.key renvoie tous les clé contenu dans lobjet.
 
     get(){
-        let httpContext = HttpContext.get();
-        let params = httpContext.path.params;
+        let params = this.HttpContext.path.params;
         let operator = params.op;
         let x = parseInt(params.x);
         let y = parseInt(params.y);
         let n = parseInt(params.n);
-        
-        
-
-        if(operator == ' ' || operator == '-' || operator == '*' || operator == '/' || operator == '%'){
-           if(isNaN(x)){
-                params.error = "'x' is not a number or is missing";
-            }
-    
-            if(isNaN(y)){
-                params.error = "'y' is not a number or is missing";
-            }
+        if (['+', ' ', '-', '*', '/', '%'].includes(operator)) {
+            if(Object.keys(params).length > 3) {params.error = "There are too many parameters";}
+            else if(Object.keys(params).length < 3) {params.error = "There are not enough parameters";}
+            else if (isNaN(x))  {params.error = "'x' is not a number or is missing";}
+            else if (isNaN(y)) {params.error = "'y' is not a number or is missing";}
+        } else if (['!', 'p', 'np'].includes(operator)) {
+            if(Object.keys(params).length > 2) {params.error = "There are too many parameters";}
+            else if(Object.keys(params).length < 2) {params.error = "There are not enough parameters";}
+            else if (isNaN(n)) {params.error = "'n' is not a number or is missing";}
+            else if (n <= 0) {params.error = "'n' parameter must be an integer > 0";}
+                
+        } else {
+            params.error = "operation doesn't exist";
         }
-        else if(operator == '!' || operator == 'p' || operator == 'np'){
-            if(isNaN(n)){
-                params.error = "'n' is not a number or is missing";
-            }
-        }
-        else{
-            params.error = "operation doesn't exists";
-        }
-        
-        
 
         if(params.error != null){
-            httpContext.response.JSON(params);
+            this.HttpContext.response.JSON(params);
             return;
         }
         
         switch(operator){
-            //addition
+            //addition with +
+            case '+': params.value = x + y; break;
+            //addition with space
             case ' ': params.value = x + y; break;
             //subtraction
             case '-': params.value = x - y; break;
@@ -61,17 +55,29 @@ export default class MathsController extends Controller {
             case 'p': params.value = this.isPrime(n); break;
             //nieme prime
             case 'np': params.value = this.findPrime(n); break;
+            default: params.error = "invalid input"; break;
 
         }
 
-        httpContext.response.JSON(params);
+        this.HttpContext.response.JSON(params);
     }
+
+    post(){
+        this.HttpContext.response.notImplemented("This method is not yet implemented");
+    }
+    put(){
+        this.HttpContext.response.notImplemented("This method is not yet implemented");
+    }
+    remove(){
+        this.HttpContext.response.notImplemented("This method is not yet implemented");
+    }
+
 
     getFactorial(number) {
         if(number < 0){
             return -1;
         }
-        else if (mumber === 0){
+        else if (number === 0){
             return 1;
         }
         else{
