@@ -2,15 +2,29 @@ import queryString from 'query-string';
 import HttpContext from '../httpContext.js';
 import Controller from './Controller.js';
 import { getQueryString } from '../utilities.js';
+
 export default class MathsController extends Controller {
     constructor(HttpContext) {
         super(HttpContext);
     }
 
-    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
-//object.key renvoie tous les clé contenu dans lobjet.
+     get() {
+        this.processOperation();
+        }
 
-    get(){
+    post() {
+        this.processOperation();
+    }
+
+    put() {
+        this.processOperation();
+    }
+
+    remove() {
+        this.processOperation();
+    }
+
+    processOperation() {
         let params = this.HttpContext.path.params;
         let operator = params.op;
         let x = parseInt(params.x);
@@ -37,8 +51,6 @@ export default class MathsController extends Controller {
         }
         
         switch(operator){
-            //addition with +
-            case '+': params.value = x + y; break;
             //addition with space
             case ' ': params.value = x + y; break;
             //subtraction
@@ -56,33 +68,18 @@ export default class MathsController extends Controller {
             //nieme prime
             case 'np': params.value = this.findPrime(n); break;
             default: params.error = "invalid input"; break;
-
-        }
-
-        this.HttpContext.response.JSON(params);
+       }
+       this.HttpContext.response.JSON(params);
     }
-
-    post(){
-        this.HttpContext.response.notImplemented("This method is not yet implemented");
-    }
-    put(){
-        this.HttpContext.response.notImplemented("This method is not yet implemented");
-    }
-    remove(){
-        this.HttpContext.response.notImplemented("This method is not yet implemented");
-    }
-
 
     getFactorial(number) {
-        if(number < 0){
+        if (number < 0) {
             return -1;
-        }
-        else if (number === 0){
+        } else if (number === 0) {
             return 1;
-        }
-        else{
+        } else {
             let result = 1;
-            for (let i = number - 1; i >= 1; i--){
+            for (let i = number - 1; i >= 1; i--) {
                 result *= i;
             }
             return result;
@@ -90,18 +87,18 @@ export default class MathsController extends Controller {
     }
 
     isPrime(x) {
-        for (var i = 2; i < x; i++) {
-            if(x % i === 0) {
+        for (let i = 2; i < x; i++) {
+            if (x % i === 0) {
                 return false;
             }
         }
         return x > 1;
     }
 
-    findPrime(x){
+    findPrime(x) {
         let primeNumber = 0;
-        for (let i = 0; i < x; i++){
-            if (this.isPrime(i)){
+        for (let i = 0; i < x; i++) {
+            if (this.isPrime(i)) {
                 primeNumber++;
             }
         }
