@@ -39,22 +39,21 @@
     <div class="results">
         <h2>Tests</h2>
         <div id="testContainer">
-            <!-- Les lignes de tests seront générées ici -->
         </div>
     </div>
     
     <div id="verdict"></div>
 
     <script>
-        // Liste de tests précédents (vide au départ)
+        
         let tests = [];
 
-        // Affiche les tests dans le conteneur
+   
         function displayTests() {
             const testContainer = document.getElementById('testContainer');
-            testContainer.innerHTML = ""; // Vider les tests précédents
+            testContainer.innerHTML = ""; 
 
-            // Générer chaque test dans l'interface
+            
             tests.forEach((test, index) => {
                 const testElement = document.createElement("div");
                 testElement.className = "test-entry";
@@ -65,36 +64,31 @@
             });
         }
 
-        // Fonction pour démarrer un test en utilisant l'URL complète
+     
         async function startTest() {
             const serverUrl = document.getElementById('serverUrl').value;
             const verdictDiv = document.getElementById('verdict');
-            verdictDiv.innerHTML = ""; // Réinitialiser le verdict
+            verdictDiv.innerHTML = ""; 
 
-            // Vérifier si l'URL est valide
             if (!serverUrl || !serverUrl.startsWith("http")) {
                 alert("Veuillez entrer une URL valide.");
                 return;
             }
 
             try {
-                // Envoyer une requête GET à l'URL fournie
                 const response = await fetch(serverUrl);
                 const jsonResponse = await response.json();
 
-                // Déterminer si la réponse est OK ou une erreur (statut HTTP)
                 const statusText = response.ok ? "OK" : `Erreur (${response.status})`;
 
-                // Ajouter le test et le résultat à la liste
                 tests.push({
                     status: statusText,
                     response: jsonResponse
                 });
 
-                // Afficher les tests actualisés
+                
                 displayTests();
 
-                // Affiche un verdict général si tous les tests sont OK
                 const allTestsPassed = tests.every(test => test.status === "OK");
                 if (allTestsPassed) {
                     verdictDiv.innerHTML = "<strong style='color: green;'>Bravo!!! Aucun problème</strong>";
